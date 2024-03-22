@@ -1,3 +1,5 @@
+# Adding badge to the README file
+[![Build Status](https://dev.azure.com/luismauricioantonio/newPipe/_apis/build/status%2FMauricio-Antonio.pipelines-java?branchName=main)](https://dev.azure.com/luismauricioantonio/newPipe/_build/latest?definitionId=10&branchName=main)
 
 # Contributing
 
