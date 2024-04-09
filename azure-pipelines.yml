@@ -10,21 +10,24 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: SonarQubePrepare@5
+# npm v1
+# Install and publish npm packages, or run an npm command. Supports npmjs.com and authenticated registries like Azure Artifacts.
+- task: Npm@1
   inputs:
-    SonarQube: 'sonarqube-ado'
-    scannerMode: 'Other'
-    extraProperties: |
-      # Additional properties that will be passed to the scanner,
-      # Put one key=value per line, example:
-      # sonar.exclusions=**/*.bin
-      sonar.projectKey=newPipe_newPipe_3898bd90-9a88-4bfa-962a-1a4bc1693f62
-      sonar.projectName=newPipe
-- task: JavaToolInstaller@0
-  inputs:
-    versionSpec: '17'
-    jdkArchitectureOption: 'x64'
-    jdkSourceOption: 'PreInstalled'
+    command: 'install' # 'ci' | 'install' | 'publish' | 'custom'. Required. Command. Default: install.
+    #workingDir: # string. Working folder that contains package.json. 
+    customCommand: npm test --coverage --watchAll=false
+  # Advanced
+    #verbose: # boolean. Optional. Use when command = install || command = ci || command = publish. Verbose logging. 
+    #publishPackageMetadata: true # boolean. Optional. Use when command = publish && publishRegistry = useFeed && command = install || command = ci || command = publish. Publish pipeline metadata. Default: true.
+  # Custom registries and authentication
+    #customRegistry: 'useNpmrc' # 'useNpmrc' | 'useFeed'. Optional. Use when command = install || command = ci || command = custom. Registries to use. Default: useNpmrc.
+    #customFeed: # string. Required when customRegistry = useFeed && command = install || command = ci || command = custom. Use packages from this Azure Artifacts/TFS registry. 
+    #customEndpoint: # string. Optional. Use when customRegistry = useNpmrc && command = install || command = ci || command = custom. Credentials for registries outside this organization/collection. 
+  # Destination registry and authentication
+    #publishRegistry: 'useExternalRegistry' # 'useExternalRegistry' | 'useFeed'. Optional. Use when command = publish. Registry location. Default: useExternalRegistry.
+    #publishFeed: # string. Required when publishRegistry = useFeed && command = publish. Target registry. 
+    #publishEndpoint: # string. Required when publishRegistry = useExternalRegistry && command = publish. External Registry.
 
 - task: Maven@3
   inputs:
@@ -36,12 +39,7 @@ steps:
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
-- task: SonarQubeAnalyze@5
-  inputs:
-    jdkversion: 'JAVA_HOME_17_X64'
-- task: SonarQubePublish@5
-  inputs:
-    pollingTimeoutSec: '300'
+
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: "JaCoCo"
