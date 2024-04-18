@@ -36,7 +36,7 @@ steps:
       cd $(Build.Repository.LocalPath)/path
       echo index.html
       ls -l $(Build.Repository.LocalPath)/path
-    workingDirectory: '$(Build.Repository.LocalPath)/path'
+    workingDirectory: '$(Build.Repository.LocalPath)'
 - task: PublishCodeCoverageResults@2
   inputs:
     summaryFileLocation: '$(Build.Repository.LocalPath)/path'
