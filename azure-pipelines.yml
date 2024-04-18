@@ -28,6 +28,15 @@ steps:
     reportDirectory: "$(System.DefaultWorkingDirectory)/**/site/jacoco"
     failIfCoverageEmpty: true
     
+- task: CmdLine@2
+  inputs:
+    script: |
+      echo creating an index.html file inside path subfolder
+      mkdir -p $(Build.Repository.LocalPath)/path
+      cd $(Build.Repository.LocalPath)/path
+      echo index.html
+      ls -l $(Build.Repository.LocalPath)/path
+    workingDirectory: '$(Build.Repository.LocalPath)/path'
 - task: PublishCodeCoverageResults@2
   inputs:
     summaryFileLocation: '$(Build.Repository.LocalPath)/path'
