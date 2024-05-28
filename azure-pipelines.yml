@@ -19,6 +19,7 @@ jobs:
           GITGUARDIAN_API_KEY: $(GITGUARDIAN_API_KEY)
 #jobs:
   - job: Main
+    dependsOn: GitGuardianShield
     pool:
       vmImage: 'ubuntu-latest'
     steps:
