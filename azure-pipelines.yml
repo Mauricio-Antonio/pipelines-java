@@ -16,7 +16,7 @@ jobs:
     steps:
       - script: ggshield secret scan ci
         env:
-          GITGUARDIAN_API_KEY: $(gitguardianApiKey)
+          GITGUARDIAN_API_KEY: $(GITGUARDIAN_API_KEY)
 #jobs:
   - job: Main
     pool:
