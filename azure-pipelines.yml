@@ -26,7 +26,6 @@ jobs:
       # Prepare Analysis Configuration task
       - task: SonarQubePrepare@6
         inputs:
-          SonarQube: 'http://localhost:9000'
           scannerMode: 'CLI'
           configMode: 'manual'
           cliProjectKey: 'pipelines-java'
