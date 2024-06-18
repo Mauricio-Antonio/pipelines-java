@@ -23,33 +23,20 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
-      - task: Maven@3
+      # Prepare Analysis Configuration task
+      - task: SonarQubePrepare@6
         inputs:
-          mavenPomFile: 'pom.xml'
-          mavenOptions: '-Xmx3072m'
-          javaHomeOption: 'JDKVersion'
-          jdkVersionOption: '1.8'
-          jdkArchitectureOption: 'x64'
-          publishJUnitResults: true
-          testResultsFiles: '**/surefire-reports/TEST-*.xml'
-          goals: 'package'
-      - task: JavaToolInstaller@0
-        inputs:
-          versionSpec: '17'
-          jdkArchitectureOption: 'x64'
-          jdkSourceOption: 'PreInstalled'
-      - task: CmdLine@2
-        inputs:
-          script: |
-            echo creating an index.html file inside path subfolder
-            mkdir -p $(Build.Repository.LocalPath)/path
-            cd $(Build.Repository.LocalPath)/path
-            echo index.html
-            ls -l $(Build.Repository.LocalPath)/path
-          workingDirectory: '$(Build.Repository.LocalPath)'
-        displayName: 'path to HTML'
+          SonarQube: 'http://localhost:9000'
+          scannerMode: 'CLI'
+          configMode: 'manual'
+          cliProjectKey: 'pipelines-java'
 
-      - task: PublishCodeCoverageResults@2
+      # Run Code Analysis task
+      - task: SonarQubeAnalyze@6
         inputs:
-          summaryFileLocation: '$(Build.Repository.LocalPath)/path'
-          pathToSources: '$(Build.Repository.LocalPath)/path/index.html'
+          jdkversion: 'JAVA_HOME_17_X64'
+
+      # Publish Quality Gate Result task
+      - task: SonarQubePublish@6
+        inputs:
+          pollingTimeoutSec: '300'
