@@ -8,6 +8,7 @@ trigger:
 
 #pool:
 #  vmImage: ubuntu-latest
+#  renew GitGuardian PI Token 61824
 jobs:
   - job: GitGuardianShield
     pool:
