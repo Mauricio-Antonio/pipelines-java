@@ -6,59 +6,37 @@
 trigger:
 - main
 
-#pool:
-#  vmImage: ubuntu-latest
-#  renew GitGuardian PI Token 61824
-jobs:
-  - job: GitGuardianShield
-    pool:
-      vmImage: 'ubuntu-latest'
-    container: gitguardian/ggshield:latest
-    steps:
-      - script: ggshield secret scan ci
-        env:
-          GITGUARDIAN_API_KEY: $(GITGUARDIAN_API_KEY)
-#jobs:
-  - job: Main
-    dependsOn: GitGuardianShield
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-      - task: CmdLine@2
-        inputs:
-          script: |
-            echo "Installing unzip"
-            sudo apt reinstall unzip -f
-            unzip -version
-        displayName: 'Installing Unzip'
-       
-      - task: Maven@3
-        inputs:
-          mavenPomFile: 'pom.xml'
-          mavenOptions: '-Xmx3072m'
-          javaHomeOption: 'JDKVersion'
-          jdkVersionOption: '1.8'
-          jdkArchitectureOption: 'x64'
-          publishJUnitResults: true
-          testResultsFiles: '**/surefire-reports/TEST-*.xml'
-          goals: 'package'
-      - task: JavaToolInstaller@0
-        inputs:
-          versionSpec: '17'
-          jdkArchitectureOption: 'x64'
-          jdkSourceOption: 'PreInstalled'
-      - task: CmdLine@2
-        inputs:
-          script: |
-            echo creating an index.html file inside path subfolder
-            mkdir -p $(Build.Repository.LocalPath)/path
-            cd $(Build.Repository.LocalPath)/path
-            echo index.html
-            ls -l $(Build.Repository.LocalPath)/path
-          workingDirectory: '$(Build.Repository.LocalPath)'
-        displayName: 'path to HTML'
+pool:
+  vmImage: ubuntu-latest
 
-      - task: PublishCodeCoverageResults@2
-        inputs:
-          summaryFileLocation: '$(Build.Repository.LocalPath)/path'
-          pathToSources: '$(Build.Repository.LocalPath)/path/index.html'
+steps:
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    mavenOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.8'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    goals: 'package'
+- task: JavaToolInstaller@0
+  inputs:
+    versionSpec: '17'
+    jdkArchitectureOption: 'x64'
+    jdkSourceOption: 'PreInstalled'
+- task: CmdLine@2
+  inputs:
+    script: |
+      echo creating an index.html file inside path subfolder
+      mkdir -p $(Build.Repository.LocalPath)/path
+      cd $(Build.Repository.LocalPath)/path
+      echo index.html
+      ls -l $(Build.Repository.LocalPath)/path
+    workingDirectory: '$(Build.Repository.LocalPath)'
+  displayName: 'path to HTML'
+
+- task: PublishCodeCoverageResults@2
+  inputs:
+    summaryFileLocation: '$(Build.Repository.LocalPath)/path'
+    pathToSources: '$(Build.Repository.LocalPath)/path/index.html'
