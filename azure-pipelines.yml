@@ -24,19 +24,39 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
-      # Prepare Analysis Configuration task
-      - task: SonarQubePrepare@6
+      - task: Bash@3
         inputs:
-          scannerMode: 'CLI'
-          configMode: 'manual'
-          cliProjectKey: 'pipelines-java'
+          script: |
+            echo "Installing unzip"
+            sudo apt install unzip -f
+       
+      - task: Maven@3
+        inputs:
+          mavenPomFile: 'pom.xml'
+          mavenOptions: '-Xmx3072m'
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.8'
+          jdkArchitectureOption: 'x64'
+          publishJUnitResults: true
+          testResultsFiles: '**/surefire-reports/TEST-*.xml'
+          goals: 'package'
+      - task: JavaToolInstaller@0
+        inputs:
+          versionSpec: '17'
+          jdkArchitectureOption: 'x64'
+          jdkSourceOption: 'PreInstalled'
+      - task: CmdLine@2
+        inputs:
+          script: |
+            echo creating an index.html file inside path subfolder
+            mkdir -p $(Build.Repository.LocalPath)/path
+            cd $(Build.Repository.LocalPath)/path
+            echo index.html
+            ls -l $(Build.Repository.LocalPath)/path
+          workingDirectory: '$(Build.Repository.LocalPath)'
+        displayName: 'path to HTML'
 
-      # Run Code Analysis task
-      - task: SonarQubeAnalyze@6
+      - task: PublishCodeCoverageResults@2
         inputs:
-          jdkversion: 'JAVA_HOME_17_X64'
-
-      # Publish Quality Gate Result task
-      - task: SonarQubePublish@6
-        inputs:
-          pollingTimeoutSec: '300'
+          summaryFileLocation: '$(Build.Repository.LocalPath)/path'
+          pathToSources: '$(Build.Repository.LocalPath)/path/index.html'
