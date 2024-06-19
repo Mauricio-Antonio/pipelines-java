@@ -28,7 +28,7 @@ jobs:
         inputs:
           script: |
             echo "Installing unzip"
-            sudo apt install unzip -f
+            sudo apt reinstall unzip -f
             unzip -version
        
       - task: Maven@3
