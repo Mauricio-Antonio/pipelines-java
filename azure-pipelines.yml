@@ -24,7 +24,7 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
-      - task: Bash@3
+      - task: CmdLine@2
         inputs:
           script: |
             echo "Installing unzip"
