@@ -30,6 +30,7 @@ jobs:
             echo "Installing unzip"
             sudo apt reinstall unzip -f
             unzip -version
+        displayName: 'Installing Unzip'
        
       - task: Maven@3
         inputs:
