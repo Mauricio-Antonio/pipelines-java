@@ -13,6 +13,9 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
+      sudo apt remove unzip
+      sudo apt update
+      sudo upgrade
       until sudo apt install unzip -f
       do
       echo "Try again"
