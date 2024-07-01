@@ -10,6 +10,16 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+- task: CmdLine@2
+  inputs:
+    script: |
+      until sudo apt install unzip -f
+      do
+      echo "Try again"
+      sleep 2
+      done
+  displayName: "Install dependencies"
+
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
