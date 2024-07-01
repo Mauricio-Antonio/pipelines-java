@@ -15,7 +15,7 @@ steps:
     script: |
       sudo apt remove unzip
       sudo apt update
-      sudo upgrade
+      sudo apt upgrade
       until sudo apt install unzip -f
       do
       echo "Try again"
