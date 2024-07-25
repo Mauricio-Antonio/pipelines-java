@@ -23,6 +23,13 @@ steps:
       done
   displayName: "Install dependencies"
 
+- task: CmdLine@2
+  inputs:
+    script: |
+      curl -fsS https://tools.veracode.com/veracode-cli/install | sh
+      ./veracode package --help
+  displayName: "Install Veracode-CLI"
+
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
