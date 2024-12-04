@@ -9,6 +9,10 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+- name: environment
+  value: dev
+
 steps:
 - task: CmdLine@2
   inputs:
@@ -60,3 +64,11 @@ steps:
   inputs:
     summaryFileLocation: '$(Build.Repository.LocalPath)/path'
     pathToSources: '$(Build.Repository.LocalPath)/path/index.html'
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+        tag=$(environment)
+        echo "##vso[build.addbuildtag]$tag"
+  displayName: 'Apply tag'
